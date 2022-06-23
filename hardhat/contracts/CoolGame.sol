@@ -90,6 +90,10 @@ contract MyEpicGame is ERC721 {
                 })
             );
         }
+
+        // I increment _tokenIds here so that my first NFT has an ID of 1.
+        // More on this in the lesson!
+        _tokenIds.increment();
     }
 
     // Users would be able to hit this function and get their NFT based on the
@@ -200,7 +204,7 @@ contract MyEpicGame is ERC721 {
         // Get the tokenId of the user's character NFT
         uint256 userNftTokenId = nftHolders[msg.sender];
         // If the user has a tokenId in the map, return their character.
-        if (userNftTokenId >= 0) {
+        if (userNftTokenId > 0) {
             return nftHolderAttributes[userNftTokenId];
         }
         // Else, return an empty character.

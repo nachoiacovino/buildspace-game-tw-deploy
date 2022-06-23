@@ -17,10 +17,10 @@ const Home: NextPage = () => {
   const [characterNFT, setCharacterNFT] = useState<Character | undefined>();
   const connectWithMetamask = useMetamask();
   const [isLoading, setIsLoading] = useState(false);
-  
+
 
   const { contract } = useContract(
-    '0x31347567Ff1DEC757F8aD1E898d8179d081eaA48',
+    '0x51F8F4da4b38286E3A32948c84987F82B0113d2e',
     );
 
   /*
@@ -35,7 +35,7 @@ const Home: NextPage = () => {
       console.log('Checking for Character NFT on address:', address);
 
       const txn = await contract?.call('checkIfUserHasNFT');
-      console.log({ txn, transformCharacterData: transformCharacterData(txn) });
+      console.log("fetchNFTMetadata", { txn, transformCharacterData: transformCharacterData(txn) });
       if (txn?.name) {
         console.log('User has character NFT');
         setCharacterNFT(transformCharacterData(txn));
