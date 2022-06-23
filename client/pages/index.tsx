@@ -18,10 +18,9 @@ const Home: NextPage = () => {
   const connectWithMetamask = useMetamask();
   const [isLoading, setIsLoading] = useState(false);
 
-
   const { contract } = useContract(
-    '0x51F8F4da4b38286E3A32948c84987F82B0113d2e',
-    );
+    '0x345F700Bc6EC121C45794A4C8f65EC597fF29C17',
+  );
 
   /*
    * Add this useEffect right under the other useEffect where you are calling checkIfWalletIsConnected
@@ -31,18 +30,21 @@ const Home: NextPage = () => {
      * The function we will call that interacts with out smart contract
      */
     const fetchNFTMetadata = async () => {
-      setIsLoading(true)
+      setIsLoading(true);
       console.log('Checking for Character NFT on address:', address);
 
       const txn = await contract?.call('checkIfUserHasNFT');
-      console.log("fetchNFTMetadata", { txn, transformCharacterData: transformCharacterData(txn) });
+      console.log('fetchNFTMetadata', {
+        txn,
+        transformCharacterData: transformCharacterData(txn),
+      });
       if (txn?.name) {
         console.log('User has character NFT');
         setCharacterNFT(transformCharacterData(txn));
       } else {
         console.log('No character NFT found');
       }
-      setIsLoading(false)
+      setIsLoading(false);
     };
 
     /*
