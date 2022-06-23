@@ -10,7 +10,7 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/utils/Base64.sol";
 
 // Our contract inherits from ERC721, which is the standard NFT contract!
-contract MyEpicGame is ERC721 {
+contract MyCoolGame is ERC721 {
     struct CharacterAttributes {
         uint256 characterIndex;
         string name;
@@ -43,6 +43,11 @@ contract MyEpicGame is ERC721 {
     // A mapping from an address => the NFTs tokenId. Gives me an ez way
     // to store the owner of the NFT and reference it later.
     mapping(address => uint256) public nftHolders;
+    // Mapping from owner to list of owned token IDs
+    mapping(address => mapping(uint256 => uint256)) private _ownedTokens;
+
+    // Array with all token ids, used for enumeration
+    uint256[] private _allTokens;
 
     event CharacterNFTMinted(
         address sender,
@@ -118,6 +123,8 @@ contract MyEpicGame is ERC721 {
 
         // Keep an easy way to see who owns what NFT.
         nftHolders[msg.sender] = newItemId;
+        _allTokens.push(newItemId);
+        _ownedTokens[msg.sender][newItemId] = newItemId;
 
         // Increment the tokenId for the next person that uses it.
         _tokenIds.increment();
@@ -224,5 +231,39 @@ contract MyEpicGame is ERC721 {
 
     function getBigBoss() public view returns (BigBoss memory) {
         return bigBoss;
+    }
+
+    /**
+     * @dev See {IERC721Enumerable-tokenOfOwnerByIndex}.
+     */
+    function tokenOfOwnerByIndex(address owner, uint256 index)
+        public
+        view
+        virtual
+        returns (uint256)
+    {
+        require(
+            index < ERC721.balanceOf(owner),
+            "ERC721Enumerable: owner index out of bounds"
+        );
+        return _ownedTokens[owner][index];
+    }
+
+    /**
+     * @dev See {IERC721Enumerable-totalSupply}.
+     */
+    function totalSupply() public view virtual returns (uint256) {
+        return _allTokens.length;
+    }
+
+    /**
+     * @dev See {IERC721Enumerable-tokenByIndex}.
+     */
+    function tokenByIndex(uint256 index) public view virtual returns (uint256) {
+        require(
+            index < MyCoolGame.totalSupply(),
+            "ERC721Enumerable: global index out of bounds"
+        );
+        return _allTokens[index];
     }
 }
